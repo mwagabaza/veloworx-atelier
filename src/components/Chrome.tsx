@@ -55,7 +55,7 @@ export function Intro({ onDone }: { onDone: () => void }) {
   )
 }
 
-export function Nav() {
+export function Nav({ onOpenBooking }: { onOpenBooking?: (service?: string) => void }) {
   const [condensed, setCondensed] = useState(false)
   const [open, setOpen] = useState(false)
 
@@ -102,12 +102,13 @@ export function Nav() {
                 {item.label}
               </a>
             ))}
-            <a
-              href="#visit"
+            <button
+              type="button"
+              onClick={() => onOpenBooking?.('Bike Fit ($225)')}
               className="vx-eyebrow border border-foreground/25 px-5 py-2.5 transition-colors duration-300 hover:border-accent hover:bg-accent hover:text-white"
             >
               Book a Fitting
-            </a>
+            </button>
           </nav>
 
           <button

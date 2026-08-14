@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react'
 import { Intro, Nav } from './components/Chrome'
+import { BookingModal } from './components/BookingModal'
 import {
   Brands,
   Ethos,
@@ -17,7 +18,15 @@ import {
 
 export default function App() {
   const [introDone, setIntroDone] = useState(false)
+  const [bookingOpen, setBookingOpen] = useState(false)
+  const [bookingService, setBookingService] = useState('Bike Fit ($225)')
+
   const finish = useCallback(() => setIntroDone(true), [])
+
+  const handleOpenBooking = useCallback((service?: string) => {
+    if (service) setBookingService(service)
+    setBookingOpen(true)
+  }, [])
 
   return (
     <div className="vx-grain min-h-screen bg-background text-foreground">
@@ -30,23 +39,29 @@ export default function App() {
         Skip to content
       </a>
 
-      <Nav />
+      <Nav onOpenBooking={handleOpenBooking} />
 
       <main>
-        <Hero />
+        <Hero onOpenBooking={handleOpenBooking} />
         <Ethos />
-        <Range />
-        <Spotlight />
-        <Service />
+        <Range onOpenBooking={handleOpenBooking} />
+        <Spotlight onOpenBooking={handleOpenBooking} />
+        <Service onOpenBooking={handleOpenBooking} />
         <Sukeun />
         <Brands />
         <TheShop />
         <Rides />
         <Testimonials />
-        <Visit />
+        <Visit onOpenBooking={handleOpenBooking} />
       </main>
 
       <Footer />
+
+      <BookingModal
+        isOpen={bookingOpen}
+        onClose={() => setBookingOpen(false)}
+        initialService={bookingService}
+      />
     </div>
   )
 }

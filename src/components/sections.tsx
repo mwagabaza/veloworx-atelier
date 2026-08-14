@@ -38,7 +38,7 @@ const heroPhotos = [
 
 /* ── Hero ─────────────────────────────────────────────────────────────── */
 
-export function Hero() {
+export function Hero({ onOpenBooking }: { onOpenBooking?: (service?: string) => void }) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
   const [y, setY] = useState(0)
@@ -118,7 +118,7 @@ export function Hero() {
               you will actually ride to the pier. Fitted, built, and tuned by hand.
             </p>
             <div className="flex flex-wrap gap-3">
-              <Magnetic href="#visit">Book a fitting</Magnetic>
+              <Magnetic onClick={() => onOpenBooking?.('Bike Fit ($225)')}>Book a fitting</Magnetic>
               <Magnetic href="#range" variant="outline" className="!text-white !border-white/30">
                 See the range
               </Magnetic>
@@ -219,7 +219,7 @@ export function Ethos() {
 
 /* ── Range ────────────────────────────────────────────────────────────── */
 
-export function Range() {
+export function Range({ onOpenBooking }: { onOpenBooking?: (service?: string) => void }) {
   const [active, setActive] = useState<number | null>(null)
 
   return (
@@ -242,9 +242,10 @@ export function Range() {
       <div className="border-t border-border">
         {CATEGORIES.map((cat, i) => (
           <Reveal key={cat.name} delay={i * 60}>
-            <a
-              href="#visit"
-              className="group relative flex items-center justify-between gap-6 border-b border-border py-7 transition-colors duration-500 hover:border-foreground sm:py-9"
+            <button
+              type="button"
+              onClick={() => onOpenBooking?.(`${cat.name} Bike Fitting / Build`)}
+              className="group relative flex w-full items-center justify-between gap-6 border-b border-border py-7 text-left transition-colors duration-500 hover:border-foreground sm:py-9"
               onPointerEnter={() => setActive(i)}
               onPointerLeave={() => setActive(null)}
               onFocus={() => setActive(i)}
@@ -275,7 +276,7 @@ export function Range() {
 
               {/* Mobile / small screens get the description stacked instead of the floating image */}
               <span className="sr-only">{cat.note}</span>
-            </a>
+            </button>
           </Reveal>
         ))}
       </div>
@@ -311,7 +312,7 @@ export function Range() {
 
 /* ── Spotlight ────────────────────────────────────────────────────────── */
 
-export function Spotlight() {
+export function Spotlight({ onOpenBooking }: { onOpenBooking?: (service?: string) => void }) {
   return (
     <section className="bg-foreground py-24 text-background sm:py-32">
       <div className={`${SHELL} grid items-center gap-14 lg:grid-cols-12`}>
@@ -351,7 +352,7 @@ export function Spotlight() {
             ))}
           </dl>
           <div className="mt-10">
-            <Magnetic href="#visit" variant="outline" className="!border-background/30 !text-background">
+            <Magnetic onClick={() => onOpenBooking?.('Test Ride: Cervélo Áspero-5')} variant="outline" className="!border-background/30 !text-background">
               Reserve a test ride
             </Magnetic>
           </div>
@@ -363,7 +364,7 @@ export function Spotlight() {
 
 /* ── Service ──────────────────────────────────────────────────────────── */
 
-export function Service() {
+export function Service({ onOpenBooking }: { onOpenBooking?: (service?: string) => void }) {
   return (
     <section id="service" className={`${SHELL} scroll-mt-24 py-28 sm:py-40`}>
       <div className="grid gap-14 lg:grid-cols-12">
@@ -390,7 +391,11 @@ export function Service() {
           <div className="border-t border-border">
             {SERVICES.map((s, i) => (
               <Reveal key={s.name} delay={i * 50}>
-                <div className="group grid grid-cols-[auto_1fr_auto] items-baseline gap-x-5 border-b border-border py-6 transition-colors duration-500 hover:border-accent">
+                <button
+                  type="button"
+                  onClick={() => onOpenBooking?.(`${s.name} (${s.price})`)}
+                  className="group grid w-full items-baseline grid-cols-[auto_1fr_auto] gap-x-5 border-b border-border py-6 text-left transition-colors duration-500 hover:border-accent"
+                >
                   <span className="vx-eyebrow text-muted-foreground">{s.index}</span>
                   <div>
                     <h3 className="font-display text-xl font-semibold tracking-[-0.02em] transition-colors duration-300 group-hover:text-accent sm:text-2xl">
@@ -404,7 +409,7 @@ export function Service() {
                     <p className="font-mono text-sm">{s.price}</p>
                     <p className="vx-eyebrow mt-1 text-muted-foreground">{s.turn}</p>
                   </div>
-                </div>
+                </button>
               </Reveal>
             ))}
           </div>
@@ -723,7 +728,7 @@ export function Testimonials() {
 
 /* ── Visit ────────────────────────────────────────────────────────────── */
 
-export function Visit() {
+export function Visit({ onOpenBooking }: { onOpenBooking?: (service?: string) => void }) {
   return (
     <section id="visit" className={`${SHELL} scroll-mt-24 py-28 sm:py-40`}>
       <Reveal className="mb-14">
@@ -779,8 +784,9 @@ export function Visit() {
                 </a>
               </dd>
             </div>
-            <div className="pt-2">
-              <Magnetic href={SHOP.mapHref}>Get directions</Magnetic>
+            <div className="flex flex-wrap gap-3 pt-2">
+              <Magnetic onClick={() => onOpenBooking?.('Bike Fit ($225)')}>Book a fitting</Magnetic>
+              <Magnetic href={SHOP.mapHref} variant="outline">Get directions</Magnetic>
             </div>
           </dl>
         </Reveal>
