@@ -1,11 +1,28 @@
 import { useEffect, useState } from 'react'
 import { NAV, SHOP } from '../lib/content'
 
-/** Wordmark: a lowercase grotesque with a hairline between velo and worx. */
+export function RedBikeGear({ className = 'h-[0.54em] w-[0.54em]' }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className={`inline-block text-accent align-[-0.04em] transition-transform duration-700 hover:rotate-90 ${className}`}
+      aria-hidden="true"
+    >
+      <path d="M12 1.75l1.1 2.2 2.45-.3.35 2.45 2.3 1.05-.75 2.35 1.75 1.75-1.75 1.75.75 2.35-2.3 1.05-.35 2.45-2.45-.3-1.1 2.2-1.1-2.2-2.45.3-.35-2.45-2.3-1.05.75-2.35-1.75-1.75 1.75-1.75-.75-2.35 2.3-1.05.35-2.45 2.45.3 1.1-2.2zM12 7a5 5 0 100 10 5 5 0 000-10zm0 2.5a2.5 2.5 0 110 5 2.5 2.5 0 010-5z" />
+    </svg>
+  )
+}
+
+/** Wordmark: a lowercase grotesque with a cool red bike gear between velo and worx. */
 export function Wordmark({ className = '' }: { className?: string }) {
   return (
-    <span className={`font-display font-extrabold lowercase tracking-[-0.05em] ${className}`}>
-      velo<span className="text-accent">·</span>worx
+    <span className={`inline-flex items-baseline font-display font-extrabold lowercase tracking-[-0.05em] ${className}`}>
+      velo
+      <span className="inline-flex items-center px-[0.06em] text-accent">
+        <RedBikeGear />
+      </span>
+      worx
     </span>
   )
 }
