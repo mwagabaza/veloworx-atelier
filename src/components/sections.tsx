@@ -97,7 +97,7 @@ export function Hero({ onOpenBooking }: { onOpenBooking?: (service?: string) => 
       <div className={`relative z-20 flex h-full flex-col justify-end pb-16 ${SHELL} sm:pb-20`}>
         <div className="max-w-5xl">
           <div className="mb-6 flex items-center gap-3">
-            <span className="vx-eyebrow rounded-full border border-white/20 bg-black/40 px-4 py-1.5 backdrop-blur-md text-accent">
+            <span className="hidden sm:inline-block vx-eyebrow rounded-full border border-white/20 bg-black/40 px-4 py-1.5 backdrop-blur-md text-accent">
               {currentPhoto.tag}
             </span>
             <p
@@ -148,7 +148,7 @@ export function Hero({ onOpenBooking }: { onOpenBooking?: (service?: string) => 
       </div>
 
       {/* Bottom Bar: Slide Counter & Animated Progress Indicator */}
-      <div className={`absolute bottom-6 left-6 right-6 z-30 flex items-center justify-between pointer-events-none sm:bottom-8 sm:left-10 sm:right-10`}>
+      <div className={`hidden sm:flex absolute bottom-6 left-6 right-6 z-30 items-center justify-between pointer-events-none sm:bottom-8 sm:left-10 sm:right-10`}>
         <div className="pointer-events-auto rounded border border-white/10 bg-black/40 px-3.5 py-1.5 backdrop-blur-md">
           <span className="font-mono text-xs text-white/80">{currentPhoto.alt}</span>
         </div>
