@@ -117,18 +117,40 @@ export function Hero({ onOpenBooking }: { onOpenBooking?: (service?: string) => 
               A boutique bicycle shop on Lincoln. Road, gravel, mountain, and the cruiser
               you will actually ride to the pier. Fitted, built, and tuned by hand.
             </p>
-            <div className="flex flex-wrap gap-3">
-              <Magnetic onClick={() => onOpenBooking?.('Bike Fit ($225)')}>Book a fitting</Magnetic>
-              <Magnetic href="#range" variant="outline" className="!text-white !border-white/30">
-                See the range
-              </Magnetic>
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex flex-wrap gap-3">
+                <Magnetic onClick={() => onOpenBooking?.('Bike Fit ($225)')}>Book a fitting</Magnetic>
+                <Magnetic href="#range" variant="outline" className="!text-white !border-white/30">
+                  See the range
+                </Magnetic>
+              </div>
+
+              {/* Mobile Slide Navigation Controls (placed below buttons on mobile) */}
+              <div className="flex sm:hidden items-center gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={prevSlide}
+                  className="rounded-full border border-white/25 bg-black/40 p-3 text-white/80 backdrop-blur-md transition-all duration-300 hover:border-accent hover:bg-black/70 hover:text-accent group"
+                  aria-label="Previous slide"
+                >
+                  <ChevronLeft className="h-5 w-5 transition-transform group-hover:-translate-x-0.5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={nextSlide}
+                  className="rounded-full border border-white/25 bg-black/40 p-3 text-white/80 backdrop-blur-md transition-all duration-300 hover:border-accent hover:bg-black/70 hover:text-accent group"
+                  aria-label="Next slide"
+                >
+                  <ChevronRight className="h-5 w-5 transition-transform group-hover:translate-x-0.5" />
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Slide Navigation Controls */}
-      <div className="absolute left-6 right-6 top-1/2 z-30 flex -translate-y-1/2 justify-between pointer-events-none sm:left-10 sm:right-10">
+      {/* Desktop / Tablet Floating Slide Navigation Controls */}
+      <div className="hidden sm:flex absolute left-10 right-10 top-1/2 z-30 -translate-y-1/2 justify-between pointer-events-none">
         <button
           type="button"
           onClick={prevSlide}
