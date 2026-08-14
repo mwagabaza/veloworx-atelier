@@ -531,8 +531,8 @@ export function TheShop() {
         <Reveal className="md:col-span-7">
           <div className="aspect-[16/10] overflow-hidden bg-muted">
             <img
-              src="/images/shop-floor.jpg"
-              alt="The Veloworx workshop floor with bikes on repair stands"
+              src="/images/veloworx-front.jpg"
+              alt="Veloworx storefront on Lincoln Blvd"
               className="h-full w-full object-cover transition-transform duration-[1.6s] ease-[cubic-bezier(0.16,1,0.3,1)] hover:scale-[1.04]"
               loading="lazy"
             />
