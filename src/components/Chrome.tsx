@@ -1,30 +1,130 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { NAV, SHOP } from '../lib/content'
 
-export function RedBikeGear({ className = 'h-[0.54em] w-[0.54em]' }: { className?: string }) {
+export function useCrankSpin(isHovered: boolean) {
+  const [rotation, setRotation] = useState(0)
+  const animRef = useRef<number | null>(null)
+  const velRef = useRef(0)
+  const rotRef = useRef(0)
+
+  useEffect(() => {
+    const maxVelocity = 15.0 // max degrees per frame (~2.5 rev/sec)
+    const accel = 0.45 // acceleration rate
+    const decel = 0.22 // deceleration rate
+
+    const loop = () => {
+      if (isHovered) {
+        velRef.current = Math.min(maxVelocity, velRef.current + accel)
+      } else {
+        velRef.current = Math.max(0, velRef.current - decel)
+      }
+
+      if (velRef.current > 0) {
+        rotRef.current = (rotRef.current + velRef.current) % 360
+        setRotation(rotRef.current)
+        animRef.current = requestAnimationFrame(loop)
+      } else {
+        animRef.current = null
+      }
+    }
+
+    if (isHovered || velRef.current > 0) {
+      if (!animRef.current) {
+        animRef.current = requestAnimationFrame(loop)
+      }
+    }
+
+    return () => {
+      if (animRef.current) {
+        cancelAnimationFrame(animRef.current)
+        animRef.current = null
+      }
+    }
+  }, [isHovered])
+
+  return rotation
+}
+
+export function RedBikeGear({ isHovered = false, className = 'h-[0.72em] w-[0.72em]' }: { isHovered?: boolean; className?: string }) {
+  const rotation = useCrankSpin(isHovered)
+
   return (
     <svg
-      viewBox="0 0 24 24"
+      viewBox="0 0 32 32"
       fill="currentColor"
-      className={`inline-block text-accent align-[-0.04em] transition-transform duration-700 hover:rotate-90 ${className}`}
+      className={`inline-block text-accent align-[-0.08em] ${className}`}
       aria-hidden="true"
     >
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M 19.496,10.746 L 22.36,11.094 L 23.492,11.559 L 23.492,12.441 L 22.36,12.906 L 19.496,13.254 L 19.298,14.122 L 21.728,15.679 L 22.545,16.588 L 22.162,17.384 L 20.941,17.312 L 18.209,16.382 L 17.654,17.078 L 19.168,19.535 L 19.51,20.709 L 18.82,21.26 L 17.751,20.665 L 15.693,18.643 L 14.891,19.029 L 15.189,21.899 L 14.987,23.105 L 14.127,23.302 L 13.422,22.302 L 12.445,19.587 L 11.555,19.587 L 10.578,22.302 L 9.873,23.302 L 9.013,23.105 L 8.811,21.899 L 9.109,19.029 L 8.307,18.643 L 6.249,20.665 L 5.18,21.26 L 4.49,20.709 L 4.832,19.535 L 6.346,17.078 L 5.791,16.382 L 3.059,17.312 L 1.838,17.384 L 1.455,16.588 L 2.272,15.679 L 4.702,14.122 L 4.504,13.254 L 1.64,12.906 L 0.508,12.441 L 0.508,11.559 L 1.64,11.094 L 4.504,10.746 L 4.702,9.878 L 2.272,8.321 L 1.455,7.412 L 1.838,6.616 L 3.059,6.688 L 5.791,7.618 L 6.346,6.922 L 4.832,4.465 L 4.49,3.291 L 5.18,2.74 L 6.249,3.335 L 8.307,5.357 L 9.109,4.971 L 8.811,2.101 L 9.013,0.895 L 9.873,0.698 L 10.578,1.698 L 11.555,4.413 L 12.445,4.413 L 13.422,1.698 L 14.127,0.698 L 14.987,0.895 L 15.189,2.101 L 14.891,4.971 L 15.693,5.357 L 17.751,3.335 L 18.82,2.74 L 19.51,3.291 L 19.168,4.465 L 17.654,6.922 L 18.209,7.618 L 20.941,6.688 L 22.162,6.616 L 22.545,7.412 L 21.728,8.321 L 19.298,9.878 Z M 15.521,12.748 L 18.065,13.289 A 6.2 6.2 0 0 1 15.1,17.369 L 13.8,15.118 A 3.6 3.6 0 0 0 15.521,12.748 Z M 12.376,15.58 L 12.648,18.166 A 6.2 6.2 0 0 1 7.851,16.607 L 9.591,14.675 A 3.6 3.6 0 0 0 12.376,15.58 Z M 8.711,13.464 L 6.336,14.522 A 6.2 6.2 0 0 1 6.336,9.478 L 8.711,10.536 A 3.6 3.6 0 0 0 8.711,13.464 Z M 9.591,9.325 L 7.851,7.393 A 6.2 6.2 0 0 1 12.648,5.834 L 12.376,8.42 A 3.6 3.6 0 0 0 9.591,9.325 Z M 13.8,8.882 L 15.1,6.631 A 6.2 6.2 0 0 1 18.065,10.711 L 15.521,11.252 A 3.6 3.6 0 0 0 13.8,8.882 Z M 16.2,12.0 a 0.6 0.6 0 1 0 1.2 0 a 0.6 0.6 0 1 0 -1.2 0 Z M 12.883,16.565 a 0.6 0.6 0 1 0 1.2 0 a 0.6 0.6 0 1 0 -1.2 0 Z M 7.517,14.821 a 0.6 0.6 0 1 0 1.2 0 a 0.6 0.6 0 1 0 -1.2 0 Z M 7.517,9.179 a 0.6 0.6 0 1 0 1.2 0 a 0.6 0.6 0 1 0 -1.2 0 Z M 12.883,7.435 a 0.6 0.6 0 1 0 1.2 0 a 0.6 0.6 0 1 0 -1.2 0 Z M 10.2,12 a 1.8 1.8 0 1 0 3.6 0 a 1.8 1.8 0 1 0 -3.6 0 Z"
-      />
+      <g
+        style={{
+          transform: `rotate(${rotation}deg)`,
+          transformOrigin: '16px 16px',
+        }}
+      >
+        {/* Outer Chainring 50t */}
+        <path d="M 29.80,15.20 L 31.00,15.15 L 31.00,16.85 L 29.80,16.80 L 29.74,17.95 L 30.91,18.25 L 30.49,19.90 L 29.35,19.50 L 28.94,20.57 L 29.99,21.20 L 29.17,22.68 L 28.16,21.95 L 27.42,22.84 L 28.32,23.74 L 27.12,24.94 L 26.22,24.04 L 25.33,24.78 L 26.06,25.79 L 24.58,26.61 L 23.95,25.56 L 22.88,25.97 L 23.28,27.11 L 21.63,27.53 L 21.33,26.36 L 20.18,26.42 L 20.23,27.62 L 18.53,27.62 L 18.48,26.42 L 17.33,26.36 L 17.03,27.53 L 15.38,27.11 L 15.78,25.97 L 14.71,25.56 L 14.08,26.61 L 12.60,25.79 L 13.33,24.78 L 12.44,24.04 L 11.54,24.94 L 10.34,23.74 L 11.24,22.84 L 10.50,21.95 L 9.49,22.68 L 8.67,21.20 L 9.72,20.57 L 9.31,19.50 L 8.17,19.90 L 7.75,18.25 L 8.92,17.95 L 8.86,16.80 L 7.66,16.85 L 7.66,15.15 L 8.86,15.20 L 8.92,14.05 L 7.75,13.75 L 8.17,12.10 L 9.31,12.50 L 9.72,11.43 L 8.67,10.80 L 9.49,9.32 L 10.50,10.05 L 11.24,9.16 L 10.34,8.26 L 11.54,7.06 L 12.44,7.96 L 13.33,7.22 L 12.60,6.21 L 14.08,5.39 L 14.71,6.44 L 15.78,6.03 L 15.38,4.89 L 17.03,4.47 L 17.33,5.64 L 18.48,5.58 L 18.53,4.38 L 20.23,4.38 L 20.18,5.58 L 21.33,5.64 L 21.63,4.47 L 23.28,4.89 L 22.88,6.03 L 23.95,6.44 L 24.58,5.39 L 26.06,6.21 L 25.33,7.22 L 26.22,7.96 L 27.12,7.06 L 28.32,8.26 L 27.42,9.16 L 28.16,10.05 L 29.17,9.32 L 29.99,10.80 L 28.94,11.43 L 29.35,12.50 L 30.49,12.10 L 30.91,13.75 L 29.74,14.05 Z" />
+
+        {/* Outer Gap Window */}
+        <circle cx="16" cy="16" r="12.8" fill="none" stroke="var(--background)" strokeWidth="0.8" />
+
+        {/* Middle Chainring 34t */}
+        <path d="M 24.40,15.45 L 25.30,15.40 L 25.30,16.60 L 24.40,16.55 L 24.33,17.40 L 25.20,17.65 L 24.85,18.80 L 23.98,18.48 L 23.63,19.26 L 24.42,19.75 L 23.75,20.80 L 22.95,20.24 L 22.36,20.91 L 23.05,21.58 L 22.18,22.45 L 21.51,21.76 L 20.84,22.35 L 21.40,23.15 L 20.35,23.82 L 19.86,23.03 L 19.08,23.38 L 19.40,24.25 L 18.25,24.60 L 17.90,23.73 L 17.05,23.80 L 17.10,24.70 L 15.90,24.70 L 15.85,23.80 L 15.00,23.73 L 14.65,24.60 L 13.50,24.25 L 13.82,23.38 L 13.04,23.03 L 12.55,23.82 L 11.50,23.15 L 12.06,22.35 L 11.39,21.76 L 10.72,22.45 L 9.85,21.58 L 10.54,20.91 L 9.95,20.24 L 9.15,20.80 L 8.48,19.75 L 9.27,19.26 L 8.92,18.48 L 8.05,18.80 L 7.70,17.65 L 8.57,17.40 L 8.50,16.55 L 7.60,16.60 L 7.60,15.40 L 8.50,15.45 L 8.57,14.60 L 7.70,14.35 L 8.05,13.20 L 8.92,13.52 L 9.27,12.74 L 8.48,12.25 L 9.15,11.20 L 9.95,11.76 L 10.54,11.09 L 9.85,10.42 L 10.72,9.55 L 11.39,10.24 L 12.06,9.65 L 11.50,8.85 L 12.55,8.18 L 13.04,8.97 L 13.82,8.62 L 13.50,7.75 L 14.65,7.40 L 15.00,8.27 L 15.85,8.20 L 15.90,7.30 L 17.10,7.30 L 17.05,8.20 L 17.90,8.27 L 18.25,7.40 L 19.40,7.75 L 19.08,8.62 L 19.86,8.97 L 20.35,8.18 L 21.40,8.85 L 20.84,9.65 L 21.51,10.24 L 22.18,9.55 L 23.05,10.42 L 22.36,11.09 L 22.95,11.76 L 23.75,11.20 L 24.42,12.25 L 23.63,12.74 L 23.98,13.52 L 24.85,13.20 L 25.20,14.35 L 24.33,14.60 Z" />
+
+        {/* Middle Gap Window */}
+        <circle cx="16" cy="16" r="9.3" fill="none" stroke="var(--background)" strokeWidth="0.7" />
+
+        {/* Inner Chainring 22t */}
+        <path d="M 21.20,15.60 L 22.00,15.55 L 22.00,16.45 L 21.20,16.40 L 21.08,17.30 L 21.82,17.60 L 21.42,18.70 L 20.66,18.32 L 20.30,19.15 L 20.98,19.70 L 20.30,20.62 L 19.56,20.01 L 18.96,20.73 L 19.53,21.47 L 18.67,22.21 L 18.04,21.41 L 17.29,21.97 L 17.67,22.79 L 16.66,23.35 L 16.20,22.45 L 15.35,22.75 L 15.54,23.65 L 14.46,23.95 L 14.18,23.02 L 13.30,23.05 L 13.28,24.00 L 12.20,24.00 L 12.18,23.05 L 11.30,23.02 L 11.02,23.95 L 9.94,23.65 L 10.13,22.75 L 9.28,22.45 L 8.82,23.35 L 7.81,22.79 L 8.19,21.97 L 7.44,21.41 L 6.81,22.21 L 5.95,21.47 L 6.52,20.73 L 5.92,20.01 L 5.18,20.62 L 4.50,19.70 L 5.18,19.15 L 4.82,18.32 L 4.06,18.70 L 3.66,17.60 L 4.40,17.30 L 4.28,16.40 L 3.48,16.45 L 3.48,15.55 L 4.28,15.60 L 4.40,14.70 L 3.66,14.40 L 4.06,13.30 L 4.82,13.68 L 5.18,12.85 L 4.50,12.30 L 5.18,11.38 L 5.92,11.99 L 6.52,11.27 L 5.95,10.53 L 6.81,9.79 L 7.44,10.59 L 8.19,10.03 L 7.81,9.21 L 8.82,8.65 L 9.28,9.55 L 10.13,9.25 L 9.94,8.35 L 11.02,8.05 L 11.30,8.98 L 12.18,8.95 L 12.20,8.00 L 13.28,8.00 L 13.30,8.95 L 14.18,8.98 L 14.46,8.05 L 15.54,8.35 L 15.35,9.25 L 16.20,9.55 L 16.66,8.65 L 17.67,9.21 L 17.29,10.03 L 18.04,10.59 L 18.67,9.79 L 19.53,10.53 L 18.96,11.27 L 19.56,11.99 L 20.30,11.38 L 20.98,12.30 L 20.30,12.85 L 20.66,13.68 L 21.42,13.30 L 21.82,14.40 L 21.08,14.70 Z" />
+
+        {/* Integrated 3-Spoke Spider & Long Rightward Crank Arm */}
+        <path
+          d="
+            M 16 12.0
+            C 18.0 12.0, 20.5 13.0, 26.5 13.8
+            C 28.5 14.1, 30.5 14.8, 30.5 16.0
+            C 30.5 17.2, 28.5 17.9, 26.5 18.2
+            C 20.5 19.0, 18.0 20.0, 16 20.0
+            C 13.0 20.0, 11.5 21.5, 8.8 25.5
+            C 7.5 27.5, 5.5 26.5, 4.5 24.8
+            C 3.5 23.2, 5.0 21.0, 7.5 18.2
+            C 5.5 16.2, 5.5 15.8, 7.5 13.8
+            C 5.0 11.0, 3.5 8.8, 4.5 7.2
+            C 5.5 5.5, 7.5 4.5, 8.8 6.5
+            C 11.5 10.5, 13.0 12.0, 16 12.0
+            Z
+          "
+        />
+
+        {/* Pedal Eyelet Hole at end of Crank Arm */}
+        <circle cx="28" cy="16" r="1.1" fill="var(--background)" />
+
+        {/* Crank Arm Channel Groove */}
+        <line x1="18.5" y1="16" x2="25.5" y2="16" stroke="var(--background)" strokeWidth="0.8" strokeLinecap="round" />
+
+        {/* Central Dust Cap / Axle Bolt */}
+        <circle cx="16" cy="16" r="2.5" fill="currentColor" />
+        <circle cx="16" cy="16" r="1.6" fill="none" stroke="var(--background)" strokeWidth="0.5" />
+        <line x1="15.2" y1="16" x2="16.8" y2="16" stroke="var(--background)" strokeWidth="0.6" strokeLinecap="round" />
+      </g>
     </svg>
   )
 }
 
 /** Wordmark: a lowercase grotesque with a cool red bike gear between velo and worx. */
 export function Wordmark({ className = '' }: { className?: string }) {
+  const [isHovered, setIsHovered] = useState(false)
+
   return (
-    <span className={`inline-flex items-baseline font-display font-extrabold lowercase tracking-[-0.05em] ${className}`}>
+    <span
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onFocus={() => setIsHovered(true)}
+      onBlur={() => setIsHovered(false)}
+      className={`group cursor-pointer inline-flex items-baseline font-display font-extrabold lowercase tracking-[-0.05em] select-none ${className}`}
+    >
       velo
-      <span className="inline-flex items-center px-[0.06em] text-accent">
-        <RedBikeGear />
+      <span className="inline-flex items-center px-[0.08em] text-accent">
+        <RedBikeGear isHovered={isHovered} />
       </span>
       worx
     </span>
